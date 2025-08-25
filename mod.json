@@ -8,7 +8,7 @@
     },
     "id": "hiimjasmine00.closeable_alerts",
     "name": "Closeable Alerts",
-    "version": "v1.0.0",
+    "version": "v1.0.1",
     "developer": "hiimjasmine00",
     "description": "Adds a close button to standard popups.",
     "dependencies": {
