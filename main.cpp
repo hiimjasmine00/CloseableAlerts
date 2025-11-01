@@ -50,7 +50,7 @@ class $modify(CAAlertLayer, FLAlertLayer) {
 uintptr_t keyBackClickedAddress = base::get() + GEODE_ARM_MAC(0x3f64cc) GEODE_INTEL_MAC(0x4890f0);
 
 void keyBackClickedHook(uintptr_t self) {
-    auto layer = reinterpret_cast<CAAlertLayer*>(self - sizeof(CCNode) - sizeof(CCAccelerometerDelegate) - sizeof(CCTouchDelegate));
+    auto layer = reinterpret_cast<CAAlertLayer*>(self - 0x150);
     if (layer->m_fields->m_overrideBack) layer->onCloseButton(nullptr);
     else reinterpret_cast<void(*)(uintptr_t)>(keyBackClickedAddress)(self);
 }
@@ -63,8 +63,8 @@ $execute {
         tulip::hook::TulipConvention::Default
     );
     hook->setPriority(Priority::Replace);
-    Mod::get()->claimHook(hook).inspectErr([](const std::string& err) {
-        log::error("Failed to hook FLAlertLayer::CCKeypadDelegate::keyBackClicked: {}", err);
-    });
+    if (auto res = Mod::get()->claimHook(hook); res.isErr()) {
+        log::error("Failed to hook FLAlertLayer::CCKeypadDelegate::keyBackClicked: {}", std::move(res).unwrapErr());
+    }
 }
 #endif
