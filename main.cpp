@@ -49,10 +49,10 @@ class $modify(CAAlertLayer, FLAlertLayer) {
 #ifdef GEODE_IS_MACOS
 uintptr_t keyBackClickedAddress = base::get() + GEODE_ARM_MAC(0x3f64cc) GEODE_INTEL_MAC(0x4890f0);
 
-void keyBackClickedHook(uintptr_t self) {
-    auto layer = reinterpret_cast<CAAlertLayer*>(self - 0x150);
+void keyBackClickedHook(CCKeypadDelegate* self) {
+    auto layer = base_cast<CAAlertLayer*>(self);
     if (layer->m_fields->m_overrideBack) layer->onCloseButton(nullptr);
-    else reinterpret_cast<void(*)(uintptr_t)>(keyBackClickedAddress)(self);
+    else reinterpret_cast<void(*)(CCKeypadDelegate*)>(keyBackClickedAddress)(self);
 }
 
 $execute {
@@ -64,7 +64,7 @@ $execute {
     );
     hook->setPriority(Priority::Replace);
     if (auto res = Mod::get()->claimHook(hook); res.isErr()) {
-        log::error("Failed to hook FLAlertLayer::CCKeypadDelegate::keyBackClicked: {}", std::move(res).unwrapErr());
+        log::error("Failed to hook FLAlertLayer::CCKeypadDelegate::keyBackClicked: {}", res.unwrapErr());
     }
 }
 #endif
