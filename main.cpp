@@ -47,7 +47,9 @@ class $modify(CAAlertLayer, FLAlertLayer) {
 };
 
 #ifdef GEODE_IS_MACOS
-uintptr_t keyBackClickedAddress = base::get() + GEODE_ARM_MAC(0x3f64cc) GEODE_INTEL_MAC(0x4890f0);
+static_assert(GEODE_COMP_GD_VERSION == 22081, "Please update the offsets for FLAlertLayer::keyBackClicked");
+
+uintptr_t keyBackClickedAddress = base::get() + GEODE_ARM_MAC(0x4003b0) GEODE_INTEL_MAC(0x49c1b0);
 
 void keyBackClickedHook(CCKeypadDelegate* self) {
     auto layer = base_cast<CAAlertLayer*>(self);
